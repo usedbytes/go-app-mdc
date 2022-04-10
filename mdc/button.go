@@ -16,10 +16,13 @@ type Button struct {
 	id string
 
 	Label string
-	Icon string
+	Icon interface{}
 
 	Raised bool
 	Outlined bool // Ignored if Raised
+	TrailingIcon bool
+
+	OnClick app.EventHandler
 }
 
 func (b *Button) OnMount(ctx app.Context) {
@@ -38,21 +41,30 @@ func (b *Button) Render() app.UI {
 		button = button.Class("mdc-button--outlined")
 	}
 
-	ripple := app.Span().
-		Class("mdc-button__ripple")
+	var icon app.UI
+	if b.Icon != nil {
+		if (b.TrailingIcon) {
+			button = button.Class("mdc-button--icon-trailing")
+		} else {
+			button = button.Class("mdc-button--icon-leading")
+		}
 
-	label := app.Span().
-		Class("mdc-button__label").
-		Text(b.Label)
+		switch t := b.Icon.(type) {
+		case string:
+			icon = MaterialIcon(t, "mdc-button__icon")
+		default:
+			app.Log("Unsupported type for button icon:", b.id)
+		}
+	}
 
-	icon := app.I().
-		Class("material-icons", "mdc-button__icon").
-		Aria("hidden", "true").
-		Text(b.Icon)
+	if b.OnClick != nil {
+		button = button.OnClick(b.OnClick)
+	}
 
 	return button.Body(
-		ripple,
-		app.If(b.Icon != "", icon),
-		label,
+		app.Span().Class("mdc-button__ripple"),
+		app.If(icon != nil && !b.TrailingIcon, icon),
+		app.Span().Class("mdc-button__label").Text(b.Label),
+		app.If(icon != nil && b.TrailingIcon, icon),
 	)
 }
