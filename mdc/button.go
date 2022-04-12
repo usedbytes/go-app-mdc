@@ -85,13 +85,19 @@ func (b *button) Render() app.UI {
 	var leadingIcon app.UI
 	if b.leadingIcon != "" {
 		button = button.Class("mdc-button--icon-trailing")
-		leadingIcon = MaterialIcon(b.leadingIcon, "mdc-button__icon")
+		leadingIcon = app.I().
+			Class("material-icons", "mdc-button__icon").
+			Aria("hidden", "true").
+			Text(b.leadingIcon)
 	}
 
 	var trailingIcon app.UI
 	if b.trailingIcon != "" {
 		button = button.Class("mdc-button--icon-leading")
-		trailingIcon = MaterialIcon(b.trailingIcon, "mdc-button__icon")
+		trailingIcon = app.I().
+			Class("material-icons", "mdc-button__icon").
+			Aria("hidden", "true").
+			Text(b.trailingIcon)
 	}
 
 	if b.onClick != nil {
