@@ -25,19 +25,43 @@ func (e *example) Render() app.UI {
 
 	return app.Div().Body(
 		app.Div().Style("padding", "5px").Body(
-			&mdc.Button{ Label: "Text Button", OnClick: clickHandler },
+			mdc.Button().
+				Label("Text Button").
+				OnClick(clickHandler),
 		),
 		app.Div().Style("padding", "5px").Body(
-			&mdc.Button{ Label: "Outlined Button", Outlined: true, OnClick: clickHandler },
+			mdc.Button().
+				Label("Outlined Button").
+				Outlined(true).
+				OnClick(clickHandler),
 		),
 		app.Div().Style("padding", "5px").Body(
-			&mdc.Button{ Label: "With icon", Icon: "favorite", OnClick: clickHandler },
+			mdc.Button().
+				Label("With icon").
+				Outlined(true).
+				LeadingIcon("favorite").
+				OnClick(clickHandler),
 		),
 		app.Div().Style("padding", "5px").Body(
-			&mdc.Button{ Label: "Raised with icon", Raised: true, Icon: "warning", OnClick: clickHandler },
+			mdc.Button().
+				Label("Trailing icon").
+				Outlined(true).
+				TrailingIcon("settings").
+				OnClick(clickHandler),
 		),
 		app.Div().Style("padding", "5px").Body(
-			&mdc.Button{ Label: "Trailing icon", Outlined: true, Icon: "settings", TrailingIcon: true, OnClick: clickHandler },
+			mdc.Button().
+				Label("Raised").
+				Raised(true).
+				OnClick(clickHandler),
+		),
+		app.Div().Style("padding", "5px").Body(
+			mdc.Button().
+				Label("Both icons").
+				Raised(true).
+				LeadingIcon("chevron_left").
+				TrailingIcon("chevron_right").
+				OnClick(clickHandler),
 		),
 	)
 }

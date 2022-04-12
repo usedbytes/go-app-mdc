@@ -10,61 +10,102 @@ import (
 
 var idCount int
 
-type Button struct {
+type button struct {
 	app.Compo
 
 	id string
 
-	Label string
-	Icon interface{}
+	label string
+	leadingIcon string
+	trailingIcon string
 
-	Raised bool
-	Outlined bool // Ignored if Raised
-	TrailingIcon bool
+	raised bool
+	outlined bool // Ignored if raised
 
-	OnClick app.EventHandler
+	onClick app.EventHandler
 }
 
-func (b *Button) OnMount(ctx app.Context) {
+type IButton interface {
+	app.UI
+
+	Label(string) IButton
+	Raised(bool) IButton
+	Outlined(bool) IButton
+	LeadingIcon(string) IButton
+	TrailingIcon(string) IButton
+	OnClick(app.EventHandler) IButton
+}
+
+func (b *button) Label(label string) IButton {
+	b.label = label
+	return b
+}
+
+func (b *button) Raised(raised bool) IButton {
+	b.raised = raised
+	return b
+}
+
+func (b *button) Outlined(outlined bool) IButton {
+	b.outlined = outlined
+	return b
+}
+
+func (b *button) LeadingIcon(icon string) IButton {
+	b.leadingIcon = icon
+	return b
+}
+
+func (b *button) TrailingIcon(icon string) IButton {
+	b.trailingIcon = icon
+	return b
+}
+
+func (b *button) OnClick(handler app.EventHandler) IButton {
+	b.onClick = handler
+	return b
+}
+
+func (b *button) OnMount(ctx app.Context) {
 	b.id = fmt.Sprintf("button-%d", idCount)
 	idCount++
 }
 
-func (b *Button) Render() app.UI {
+func (b *button) Render() app.UI {
 	button := app.Button().
 		Class("mdc-button").
 		ID(b.id)
 
-	if (b.Raised) {
+	if (b.raised) {
 		button = button.Class("mdc-button--raised")
-	} else if (b.Outlined) {
+	} else if (b.outlined) {
 		button = button.Class("mdc-button--outlined")
 	}
 
-	var icon app.UI
-	if b.Icon != nil {
-		if (b.TrailingIcon) {
-			button = button.Class("mdc-button--icon-trailing")
-		} else {
-			button = button.Class("mdc-button--icon-leading")
-		}
-
-		switch t := b.Icon.(type) {
-		case string:
-			icon = MaterialIcon(t, "mdc-button__icon")
-		default:
-			app.Log("Unsupported type for button icon:", b.id)
-		}
+	var leadingIcon app.UI
+	if b.leadingIcon != "" {
+		button = button.Class("mdc-button--icon-trailing")
+		leadingIcon = MaterialIcon(b.leadingIcon, "mdc-button__icon")
 	}
 
-	if b.OnClick != nil {
-		button = button.OnClick(b.OnClick)
+	var trailingIcon app.UI
+	if b.trailingIcon != "" {
+		button = button.Class("mdc-button--icon-leading")
+		trailingIcon = MaterialIcon(b.trailingIcon, "mdc-button__icon")
+	}
+
+	if b.onClick != nil {
+		button = button.OnClick(b.onClick)
 	}
 
 	return button.Body(
 		app.Span().Class("mdc-button__ripple"),
-		app.If(icon != nil && !b.TrailingIcon, icon),
-		app.Span().Class("mdc-button__label").Text(b.Label),
-		app.If(icon != nil && b.TrailingIcon, icon),
+		app.If(leadingIcon != nil, leadingIcon),
+		app.Span().Class("mdc-button__label").Text(b.label),
+		app.If(trailingIcon != nil, trailingIcon),
 	)
+}
+
+func Button() IButton {
+	return &button{}
 }
