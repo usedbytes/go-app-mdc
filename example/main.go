@@ -64,6 +64,20 @@ func (e *example) Render() app.UI {
 				TrailingIcon("chevron_right").
 				OnClick(clickHandler),
 		),
+		app.Div().Style("padding", "5px").Body(
+			mdc.IconButton().
+				Icon("favorite").
+				OnClick(clickHandler),
+			mdc.IconButtonToggle().
+				IconOff("visibility_off").
+				IconOn("visibility_on").
+				OnClick(clickHandler),
+			mdc.IconButtonToggle().
+				On(true).
+				IconOff("arrow_back").
+				IconOn("arrow_forward").
+				OnClick(clickHandler),
+		),
 	)
 }
 
