@@ -26,6 +26,7 @@ func (e *example) Render() app.UI {
 	return app.Div().Body(
 		app.Div().Style("padding", "5px").Body(
 			mdc.Button().
+				ID("text-button").
 				Label("Text Button").
 				OnClick(clickHandler),
 		),

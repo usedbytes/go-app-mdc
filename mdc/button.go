@@ -8,8 +8,6 @@ import (
 	"github.com/maxence-charriere/go-app/v9/pkg/app"
 )
 
-var idCount int
-
 type button struct {
 	app.Compo
 
@@ -29,12 +27,18 @@ type button struct {
 type IButton interface {
 	app.UI
 
+	ID(string) IButton
 	Label(string) IButton
 	Raised(bool) IButton
 	Outlined(bool) IButton
 	LeadingIcon(string) IButton
 	TrailingIcon(string) IButton
 	OnClick(app.EventHandler) IButton
+}
+
+func (b *button) ID(id string) IButton {
+	b.id = id
+	return b
 }
 
 func (b *button) Label(label string) IButton {
@@ -69,8 +73,7 @@ func (b *button) OnClick(handler app.EventHandler) IButton {
 
 func (b *button) OnMount(ctx app.Context) {
 	if b.id == "" {
-		b.id = fmt.Sprintf("button-%d", idCount)
-		idCount++
+		b.id = fmt.Sprintf("button-%d", allocID())
 	}
 
 	b.mdcComponent = app.Window().
