@@ -14,6 +14,7 @@ type button struct {
 	app.Compo
 
 	id string
+	mdcComponent app.Value
 
 	Ilabel string
 	IleadingIcon string
@@ -67,9 +68,22 @@ func (b *button) OnClick(handler app.EventHandler) IButton {
 }
 
 func (b *button) OnMount(ctx app.Context) {
-	b.id = fmt.Sprintf("button-%d", idCount)
-	app.Log("mounted", b.id)
-	idCount++
+	if b.id == "" {
+		b.id = fmt.Sprintf("button-%d", idCount)
+		idCount++
+	}
+
+	b.mdcComponent = app.Window().
+		Get("mdc").
+		Get("ripple").
+		Get("MDCRipple").
+		Call("attachTo", ctx.JSSrc())
+
+	app.Log("mounted", b.id, b.mdcComponent)
+}
+
+func (b *button) OnDismount(ctx app.Context) {
+	b.mdcComponent.Call("destroy")
 }
 
 func (b *button) Render() app.UI {
