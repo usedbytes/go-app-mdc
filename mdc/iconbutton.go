@@ -17,6 +17,8 @@ type iconButton struct {
 	Iicon string
 
 	IonClick app.EventHandler
+
+	Iclass []string
 }
 
 type IIconButton interface {
@@ -25,6 +27,8 @@ type IIconButton interface {
 	ID(string) IIconButton
 	Icon(string) IIconButton
 	OnClick(app.EventHandler) IIconButton
+
+	Class(...string) IIconButton
 }
 
 func (b *iconButton) ID(id string) IIconButton {
@@ -39,6 +43,11 @@ func (b *iconButton) Icon(icon string) IIconButton {
 
 func (b *iconButton) OnClick(handler app.EventHandler) IIconButton {
 	b.IonClick = handler
+	return b
+}
+
+func (b *iconButton) Class(c ...string) IIconButton {
+	b.Iclass = c
 	return b
 }
 
@@ -65,6 +74,7 @@ func (b *iconButton) OnDismount(ctx app.Context) {
 func (b *iconButton) Render() app.UI {
 	iconButton := app.Button().
 		Class("mdc-icon-button", "material-icons").
+		Class(b.Iclass...).
 		ID(b.id)
 
 

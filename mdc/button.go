@@ -22,6 +22,8 @@ type button struct {
 	Ioutlined bool // Ignored if raised
 
 	IonClick app.EventHandler
+
+	Iclass []string
 }
 
 type IButton interface {
@@ -71,6 +73,11 @@ func (b *button) OnClick(handler app.EventHandler) IButton {
 	return b
 }
 
+func (b *button) Class(c ...string) IButton {
+	b.Iclass = c
+	return b
+}
+
 func (b *button) OnMount(ctx app.Context) {
 	if b.id == "" {
 		b.id = fmt.Sprintf("button-%d", allocID())
@@ -92,6 +99,7 @@ func (b *button) OnDismount(ctx app.Context) {
 func (b *button) Render() app.UI {
 	button := app.Button().
 		Class("mdc-button").
+		Class(b.Iclass...).
 		ID(b.id)
 
 	if (b.Iraised) {

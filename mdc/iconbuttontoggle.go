@@ -19,6 +19,8 @@ type iconButtonToggle struct {
 	Ion bool
 
 	IonClick app.EventHandler
+
+	Iclass []string
 }
 
 type IIconButtonToggle interface {
@@ -56,6 +58,11 @@ func (b *iconButtonToggle) OnClick(handler app.EventHandler) IIconButtonToggle {
 	return b
 }
 
+func (b *iconButtonToggle) Class(c ...string) IIconButtonToggle {
+	b.Iclass = c
+	return b
+}
+
 func (b *iconButtonToggle) OnMount(ctx app.Context) {
 	if b.id == "" {
 		b.id = fmt.Sprintf("iconbutton-%d", allocID())
@@ -77,6 +84,7 @@ func (b *iconButtonToggle) OnDismount(ctx app.Context) {
 func (b *iconButtonToggle) Render() app.UI {
 	iconButtonToggle := app.Button().
 		Class("mdc-icon-button").
+		Class(b.Iclass...).
 		Aria("pressed", b.Ion).
 		ID(b.id)
 
