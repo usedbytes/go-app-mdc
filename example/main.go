@@ -41,6 +41,37 @@ func (e *example) Render() app.UI {
 		app.Main().
 			Class(mdc.AppBarMainClass).
 			Body(
+				mdc.List().
+					Items(
+						mdc.ListItem().
+							Text("Item 1").
+							Meta(
+								app.Span().
+								Class(mdc.ListItemMetaClass).
+								Text("META"),
+							),
+						mdc.ListItem().
+							Text("Item 2").
+							Meta(
+								app.I().
+								Class("material-icons", mdc.ListItemMetaClass).
+								Text("bookmark"),
+							),
+					),
+				// Note that mixing item sizes in the same
+				// list doesn't work properly:
+				// https://github.com/material-components/material-components-web/issues/4209
+				mdc.ListTwoLine().
+					Items(
+						mdc.ListItemTwoLine().
+							Text("Two Line Item 1").
+							SecondaryText("Secondary text").
+							Graphic(app.I().Class("material-icons", mdc.ListItemGraphicClass).Text("thumb_up")),
+						mdc.ListItemTwoLine().
+							Text("Two Line Item 2").
+							SecondaryText("Secondary text").
+							Graphic(app.I().Class("material-icons", mdc.ListItemGraphicClass).Text("thumb_down")),
+					),
 				app.Div().Style("padding", "5px").Body(
 					mdc.Button().
 						ID("text-button").
