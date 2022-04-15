@@ -24,60 +24,78 @@ func (e *example) Render() app.UI {
 	}
 
 	return app.Div().Body(
-		app.Div().Style("padding", "5px").Body(
-			mdc.Button().
-				ID("text-button").
-				Label("Text Button").
-				OnClick(clickHandler),
-		),
-		app.Div().Style("padding", "5px").Body(
-			mdc.Button().
-				Label("Outlined Button").
-				Outlined(true).
-				OnClick(clickHandler),
-		),
-		app.Div().Style("padding", "5px").Body(
-			mdc.Button().
-				Label("With icon").
-				Outlined(true).
-				LeadingIcon("favorite").
-				OnClick(clickHandler),
-		),
-		app.Div().Style("padding", "5px").Body(
-			mdc.Button().
-				Label("Trailing icon").
-				Outlined(true).
-				TrailingIcon("settings").
-				OnClick(clickHandler),
-		),
-		app.Div().Style("padding", "5px").Body(
-			mdc.Button().
-				Label("Raised").
-				Raised(true).
-				OnClick(clickHandler),
-		),
-		app.Div().Style("padding", "5px").Body(
-			mdc.Button().
-				Label("Both icons").
-				Raised(true).
-				LeadingIcon("chevron_left").
-				TrailingIcon("chevron_right").
-				OnClick(clickHandler),
-		),
-		app.Div().Style("padding", "5px").Body(
-			mdc.IconButton().
-				Icon("favorite").
-				OnClick(clickHandler),
-			mdc.IconButtonToggle().
-				IconOff("visibility_off").
-				IconOn("visibility_on").
-				OnClick(clickHandler),
-			mdc.IconButtonToggle().
-				On(true).
-				IconOff("arrow_back").
-				IconOn("arrow_forward").
-				OnClick(clickHandler),
-		),
+		mdc.AppBarTop().
+			Title("MDC Example").
+			NavIcon(
+				mdc.IconButton().
+					Class(mdc.AppBarNavigationClass).
+					Icon("menu"),
+			).Actions(
+				mdc.IconButton().
+					Class(mdc.AppBarActionClass).
+					Icon("help"),
+				mdc.IconButton().
+					Class(mdc.AppBarActionClass).
+					Icon("settings"),
+			),
+		app.Main().
+			Class(mdc.AppBarMainClass).
+			Body(
+				app.Div().Style("padding", "5px").Body(
+					mdc.Button().
+						ID("text-button").
+						Label("Text Button").
+						OnClick(clickHandler),
+				),
+				app.Div().Style("padding", "5px").Body(
+					mdc.Button().
+						Label("Outlined Button").
+						Outlined(true).
+						OnClick(clickHandler),
+				),
+				app.Div().Style("padding", "5px").Body(
+					mdc.Button().
+						Label("With icon").
+						Outlined(true).
+						LeadingIcon("favorite").
+						OnClick(clickHandler),
+				),
+				app.Div().Style("padding", "5px").Body(
+					mdc.Button().
+						Label("Trailing icon").
+						Outlined(true).
+						TrailingIcon("settings").
+						OnClick(clickHandler),
+				),
+				app.Div().Style("padding", "5px").Body(
+					mdc.Button().
+						Label("Raised").
+						Raised(true).
+						OnClick(clickHandler),
+				),
+				app.Div().Style("padding", "5px").Body(
+					mdc.Button().
+						Label("Both icons").
+						Raised(true).
+						LeadingIcon("chevron_left").
+						TrailingIcon("chevron_right").
+						OnClick(clickHandler),
+				),
+				app.Div().Style("padding", "5px").Body(
+					mdc.IconButton().
+						Icon("favorite").
+						OnClick(clickHandler),
+					mdc.IconButtonToggle().
+						IconOff("visibility_off").
+						IconOn("visibility_on").
+						OnClick(clickHandler),
+					mdc.IconButtonToggle().
+						On(true).
+						IconOff("arrow_back").
+						IconOn("arrow_forward").
+						OnClick(clickHandler),
+				),
+			),
 	)
 }
 
