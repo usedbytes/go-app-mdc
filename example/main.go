@@ -15,7 +15,9 @@ import (
 type example struct {
 	app.Compo
 
-	buttonText string
+	content app.UI
+	buttons buttonExample
+	lists   listExample
 }
 
 func (e *example) Render() app.UI {
@@ -44,26 +46,33 @@ func (e *example) Render() app.UI {
 				Content(
 					mdc.NavList().Items(
 						mdc.NavListItem().
-							Text("Item 1").
+							Text("Buttons").
 							Meta(
 								app.Span().
 								Class(mdc.ListItemMetaClass).
 								Text("META"),
-							),
+							).
+							OnClick(func(ctx app.Context, ev app.Event) {
+								e.content = &e.buttons
+								e.Update()
+							}),
 						mdc.NavListItem().
-							Text("Item 2").
+							Text("Lists").
 							Meta(
 								app.I().
 								Class("material-icons", mdc.ListItemMetaClass).
 								Text("bookmark"),
-							),
+							).
+							OnClick(func(ctx app.Context, ev app.Event) {
+								e.content = &e.lists
+								e.Update()
+							}),
 					),
 				),
 			app.Div().
 				Class("mdc-drawer-app-content").
 				Body(
-					//&buttonExample{},
-					&listExample{},
+					e.content,
 				),
 	)
 }
