@@ -19,6 +19,11 @@ const (
 	ListItemMetaClass = "mdc-deprecated-list-item__meta"
 )
 
+func defaultClick(app.Context, app.Event) {
+	// Just to avoid panics if no handler is set
+	// IMO this should be handled in go-app
+}
+
 type list struct {
 	app.Compo
 
@@ -112,6 +117,8 @@ type listItem struct {
 	Itext string
 	Igraphic app.UI
 	Imeta app.UI
+
+	IonClick app.EventHandler
 }
 
 type IListItem interface {
@@ -121,6 +128,7 @@ type IListItem interface {
 	Text(string) IListItem
 	Graphic(app.UI) IListItem
 	Meta(app.UI) IListItem
+	OnClick(app.EventHandler) IListItem
 }
 
 func (l *listItem) ID(id string) IListItem {
@@ -140,6 +148,11 @@ func (l *listItem) Graphic(g app.UI) IListItem {
 
 func (l *listItem) Meta(m app.UI) IListItem {
 	l.Imeta = m
+	return l
+}
+
+func (l *listItem) OnClick(handler app.EventHandler) IListItem {
+	l.IonClick = handler
 	return l
 }
 
@@ -172,15 +185,22 @@ func (l *listItem) Render() app.UI {
 		l.Imeta,
 	}
 
+	onClick := l.IonClick
+	if onClick == nil {
+		onClick = defaultClick
+	}
+
 	if l.nav {
 		return app.A().
 			Class("mdc-deprecated-list-item").
 			ID(l.id).
+			OnClick(onClick).
 			Body(body...)
 	} else {
 		return app.Li().
 			Class("mdc-deprecated-list-item").
 			ID(l.id).
+			OnClick(onClick).
 			Body(body...)
 	}
 }
@@ -207,6 +227,8 @@ type IListItemTwoLine interface {
 	ID(string) IListItemTwoLine
 	Text(string) IListItemTwoLine
 	Graphic(app.UI) IListItemTwoLine
+	Meta(app.UI) IListItemTwoLine
+	OnClick(app.EventHandler) IListItemTwoLine
 
 	SecondaryText(string) IListItemTwoLine
 }
@@ -236,8 +258,12 @@ func (l *listItemTwoLine) Meta(m app.UI) IListItemTwoLine {
 	return l
 }
 
-func (l *listItemTwoLine) Render() app.UI {
+func (l *listItemTwoLine) OnClick(handler app.EventHandler) IListItemTwoLine {
+	l.IonClick = handler
+	return l
+}
 
+func (l *listItemTwoLine) Render() app.UI {
 	primary := app.Span().
 			Class("mdc-deprecated-list-item__primary-text").
 			Text(l.Itext)
@@ -259,15 +285,22 @@ func (l *listItemTwoLine) Render() app.UI {
 		l.Imeta,
 	}
 
+	onClick := l.IonClick
+	if onClick == nil {
+		onClick = defaultClick
+	}
+
 	if l.nav {
 		return app.A().
 			Class("mdc-deprecated-list-item").
 			ID(l.id).
+			OnClick(onClick).
 			Body(body...)
 	} else {
 		return app.Li().
 			Class("mdc-deprecated-list-item").
 			ID(l.id).
+			OnClick(onClick).
 			Body(body...)
 	}
 }
