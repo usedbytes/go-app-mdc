@@ -23,6 +23,7 @@ type list struct {
 	app.Compo
 
 	id string
+	nav bool
 	mdcComponent app.Value
 	linesClass string
 
@@ -65,17 +66,27 @@ func (l *list) OnDismount(ctx app.Context) {
 }
 
 func (l *list) Render() app.UI {
-	list := app.Ul().
-		Class("mdc-deprecated-list", l.linesClass).
-		ID(l.id)
-
-	return list.Body(
-		l.Iitems...
-	)
+	if l.nav {
+		return app.Nav().
+			Class("mdc-deprecated-list", l.linesClass).
+			ID(l.id).
+			Body(l.Iitems...)
+	} else {
+		return app.Ul().
+			Class("mdc-deprecated-list", l.linesClass).
+			ID(l.id).
+			Body(l.Iitems...)
+	}
 }
 
 func List() IList {
-	return &list{}
+	return &list{ }
+}
+
+func NavList() IList {
+	return &list{
+		nav: true,
+	}
 }
 
 func ListTwoLine() IList {
@@ -84,10 +95,18 @@ func ListTwoLine() IList {
 	}
 }
 
+func NavListTwoLine() IList {
+	return &list{
+		linesClass: "mdc-deprecated-list--two-line",
+		nav: true,
+	}
+}
+
 type listItem struct {
 	app.Compo
 
 	id string
+	nav bool
 	mdcComponent app.Value
 
 	Itext string
@@ -143,11 +162,7 @@ func (l *listItem) OnDismount(ctx app.Context) {
 }
 
 func (l *listItem) Render() app.UI {
-	item := app.Li().
-		Class("mdc-deprecated-list-item").
-		ID(l.id)
-
-	return item.Body(
+	body := []app.UI{
 		app.Span().
 			Class("mdc-deprecated-list-item__ripple"),
 		l.Igraphic,
@@ -155,11 +170,29 @@ func (l *listItem) Render() app.UI {
 			Class("mdc-deprecated-list-item__text").
 			Text(l.Itext),
 		l.Imeta,
-	)
+	}
+
+	if l.nav {
+		return app.A().
+			Class("mdc-deprecated-list-item").
+			ID(l.id).
+			Body(body...)
+	} else {
+		return app.Li().
+			Class("mdc-deprecated-list-item").
+			ID(l.id).
+			Body(body...)
+	}
 }
 
 func ListItem() IListItem {
 	return &listItem{}
+}
+
+func NavListItem() IListItem {
+	return &listItem{
+		nav: true,
+	}
 }
 
 type listItemTwoLine struct {
@@ -203,11 +236,7 @@ func (l *listItemTwoLine) Meta(m app.UI) IListItemTwoLine {
 	return l
 }
 
-
 func (l *listItemTwoLine) Render() app.UI {
-	item := app.Li().
-		Class("mdc-deprecated-list-item").
-		ID(l.id)
 
 	primary := app.Span().
 			Class("mdc-deprecated-list-item__primary-text").
@@ -217,7 +246,7 @@ func (l *listItemTwoLine) Render() app.UI {
 			Class("mdc-deprecated-list-item__secondary-text").
 			Text(l.IsecondaryText)
 
-	return item.Body(
+	body := []app.UI{
 		app.Span().
 			Class("mdc-deprecated-list-item__ripple"),
 		l.Igraphic,
@@ -228,9 +257,29 @@ func (l *listItemTwoLine) Render() app.UI {
 				secondary,
 			),
 		l.Imeta,
-	)
+	}
+
+	if l.nav {
+		return app.A().
+			Class("mdc-deprecated-list-item").
+			ID(l.id).
+			Body(body...)
+	} else {
+		return app.Li().
+			Class("mdc-deprecated-list-item").
+			ID(l.id).
+			Body(body...)
+	}
 }
 
 func ListItemTwoLine() IListItemTwoLine {
 	return &listItemTwoLine{}
+}
+
+func NavListItemTwoLine() IListItemTwoLine {
+	return &listItemTwoLine{
+		listItem: listItem{
+			nav: true,
+		},
+	}
 }
