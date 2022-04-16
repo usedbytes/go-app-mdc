@@ -19,10 +19,6 @@ type example struct {
 }
 
 func (e *example) Render() app.UI {
-	clickHandler := func(c app.Context, e app.Event) {
-		app.Log(c.JSSrc().Get("id"), "clicked")
-	}
-
 	return app.Div().
 		ID("container").
 		Body(
@@ -66,78 +62,8 @@ func (e *example) Render() app.UI {
 			app.Div().
 				Class("mdc-drawer-app-content").
 				Body(
-					app.Main().
-						Class(mdc.AppBarMainClass).
-						Class("main-content").
-						Body(
-							// Note that mixing item sizes in the same
-							// list doesn't work properly:
-							// https://github.com/material-components/material-components-web/issues/4209
-							mdc.ListTwoLine().Items(
-								mdc.ListItemTwoLine().
-									Text("Two Line Item 1").
-									SecondaryText("Secondary text").
-									Graphic(app.I().Class("material-icons", mdc.ListItemGraphicClass).Text("thumb_up")),
-								mdc.ListItemTwoLine().
-									Text("Two Line Item 2").
-									SecondaryText("Secondary text").
-									Graphic(app.I().Class("material-icons", mdc.ListItemGraphicClass).Text("thumb_down")),
-							),
-							app.Div().Style("padding", "5px").Body(
-								mdc.Button().
-									ID("text-button").
-									Label("Text Button").
-									OnClick(clickHandler),
-							),
-							app.Div().Style("padding", "5px").Body(
-								mdc.Button().
-									Label("Outlined Button").
-									Outlined(true).
-									OnClick(clickHandler),
-							),
-							app.Div().Style("padding", "5px").Body(
-								mdc.Button().
-									Label("With icon").
-									Outlined(true).
-									LeadingIcon("favorite").
-									OnClick(clickHandler),
-							),
-							app.Div().Style("padding", "5px").Body(
-								mdc.Button().
-									Label("Trailing icon").
-									Outlined(true).
-									TrailingIcon("settings").
-									OnClick(clickHandler),
-							),
-							app.Div().Style("padding", "5px").Body(
-								mdc.Button().
-									Label("Raised").
-									Raised(true).
-									OnClick(clickHandler),
-							),
-							app.Div().Style("padding", "5px").Body(
-								mdc.Button().
-									Label("Both icons").
-									Raised(true).
-									LeadingIcon("chevron_left").
-									TrailingIcon("chevron_right").
-									OnClick(clickHandler),
-							),
-							app.Div().Style("padding", "5px").Body(
-								mdc.IconButton().
-									Icon("favorite").
-									OnClick(clickHandler),
-								mdc.IconButtonToggle().
-									IconOff("visibility_off").
-									IconOn("visibility_on").
-									OnClick(clickHandler),
-								mdc.IconButtonToggle().
-									On(true).
-									IconOff("arrow_back").
-									IconOn("arrow_forward").
-									OnClick(clickHandler),
-							),
-						),
+					//&buttonExample{},
+					&listExample{},
 				),
 	)
 }
