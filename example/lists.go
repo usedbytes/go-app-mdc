@@ -8,13 +8,13 @@ import (
 
 type listExample struct {
 	app.Compo
+
+	lists []app.UI
 }
 
-func (e *listExample) Render() app.UI {
-	return app.Main().
-		Class(mdc.AppBarMainClass).
-		Class("main-content").
-		Body(
+func ListExample() *listExample {
+	return &listExample{
+		lists: []app.UI{
 			mdc.List().Items(
 				mdc.ListItem().
 					Text("Item 1").
@@ -52,5 +52,17 @@ func (e *listExample) Render() app.UI {
 						Text("thumb_down"),
 					),
 			),
-	)
+		},
+	}
+}
+
+func (e *listExample) Render() app.UI {
+	return app.Main().
+		Class(mdc.AppBarMainClass).
+		Class("main-content").
+		Body(
+			app.Range(e.lists).Slice(func (i int) app.UI {
+				return e.lists[i]
+			}),
+		)
 }

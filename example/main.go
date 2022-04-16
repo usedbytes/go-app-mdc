@@ -16,8 +16,8 @@ type example struct {
 	app.Compo
 
 	content app.UI
-	buttons buttonExample
-	lists   listExample
+	buttons *buttonExample
+	lists   *listExample
 }
 
 func (e *example) Render() app.UI {
@@ -41,8 +41,6 @@ func (e *example) Render() app.UI {
 				),
 			mdc.Drawer().
 				Class(mdc.AppBarMainClass).
-				Title("Nav Title").
-				Subtitle("Nav subtitle").
 				Content(
 					mdc.NavList().Items(
 						mdc.NavListItem().
@@ -53,7 +51,10 @@ func (e *example) Render() app.UI {
 								Text("META"),
 							).
 							OnClick(func(ctx app.Context, ev app.Event) {
-								e.content = &e.buttons
+								if (e.buttons == nil) {
+									e.buttons = ButtonExample()
+								}
+								e.content = e.buttons
 								e.Update()
 							}),
 						mdc.NavListItem().
@@ -64,7 +65,10 @@ func (e *example) Render() app.UI {
 								Text("bookmark"),
 							).
 							OnClick(func(ctx app.Context, ev app.Event) {
-								e.content = &e.lists
+								if (e.lists == nil) {
+									e.lists = ListExample()
+								}
+								e.content = e.lists
 								e.Update()
 							}),
 					),
