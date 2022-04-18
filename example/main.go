@@ -16,6 +16,7 @@ type example struct {
 	app.Compo
 
 	drawer mdc.IDrawer
+	banner mdc.IBanner
 	content app.UI
 	buttons *buttonExample
 	lists   *listExample
@@ -57,6 +58,23 @@ func (e *example) OnMount(ctx app.Context) {
 					}),
 			),
 		)
+	e.banner = mdc.Banner().
+		Class(mdc.AppBarMainClass).
+		Fixed(true).
+		Text("Use the navigation menu in the top-left to explore the examples").
+		Graphic(
+			app.I().
+				Class("material-icons").
+				Class(mdc.BannerGraphicClass).
+				Text("lightbulb"),
+		).
+		Actions(
+			mdc.Button().
+				Label("Got it").
+				OnClick(func(ctx app.Context, ev app.Event) {
+					e.banner.Close()
+				}),
+		).Open()
 }
 
 func (e *example) Render() app.UI {
@@ -85,6 +103,7 @@ func (e *example) Render() app.UI {
 			app.Div().
 				Class("mdc-drawer-app-content").
 				Body(
+					e.banner,
 					e.content,
 				),
 	)
