@@ -15,9 +15,48 @@ import (
 type example struct {
 	app.Compo
 
+	drawer mdc.IDrawer
 	content app.UI
 	buttons *buttonExample
 	lists   *listExample
+}
+
+func (e *example) OnMount(ctx app.Context) {
+	e.drawer = mdc.Drawer().
+		Class(mdc.AppBarMainClass).
+		Dismissible(true).
+		Content(
+			mdc.NavList().Items(
+				mdc.NavListItem().
+					Text("Buttons").
+					Meta(
+						app.Span().
+						Class(mdc.ListItemMetaClass).
+						Text("META"),
+					).
+					OnClick(func(ctx app.Context, ev app.Event) {
+						if (e.buttons == nil) {
+							e.buttons = ButtonExample()
+						}
+						e.content = e.buttons
+						e.Update()
+					}),
+				mdc.NavListItem().
+					Text("Lists").
+					Meta(
+						app.I().
+						Class("material-icons", mdc.ListItemMetaClass).
+						Text("bookmark"),
+					).
+					OnClick(func(ctx app.Context, ev app.Event) {
+						if (e.lists == nil) {
+							e.lists = ListExample()
+						}
+						e.content = e.lists
+						e.Update()
+					}),
+			),
+		)
 }
 
 func (e *example) Render() app.UI {
@@ -30,7 +69,10 @@ func (e *example) Render() app.UI {
 				NavIcon(
 					mdc.IconButton().
 						Class(mdc.AppBarNavigationClass).
-						Icon("menu"),
+						Icon("menu").
+						OnClick(func (ctx app.Context, ev app.Event) {
+							e.drawer.ToggleOpen()
+						}),
 				).Actions(
 					mdc.IconButton().
 						Class(mdc.AppBarActionClass).
@@ -39,40 +81,7 @@ func (e *example) Render() app.UI {
 						Class(mdc.AppBarActionClass).
 						Icon("settings"),
 				),
-			mdc.Drawer().
-				Class(mdc.AppBarMainClass).
-				Content(
-					mdc.NavList().Items(
-						mdc.NavListItem().
-							Text("Buttons").
-							Meta(
-								app.Span().
-								Class(mdc.ListItemMetaClass).
-								Text("META"),
-							).
-							OnClick(func(ctx app.Context, ev app.Event) {
-								if (e.buttons == nil) {
-									e.buttons = ButtonExample()
-								}
-								e.content = e.buttons
-								e.Update()
-							}),
-						mdc.NavListItem().
-							Text("Lists").
-							Meta(
-								app.I().
-								Class("material-icons", mdc.ListItemMetaClass).
-								Text("bookmark"),
-							).
-							OnClick(func(ctx app.Context, ev app.Event) {
-								if (e.lists == nil) {
-									e.lists = ListExample()
-								}
-								e.content = e.lists
-								e.Update()
-							}),
-					),
-				),
+			e.drawer,
 			app.Div().
 				Class("mdc-drawer-app-content").
 				Body(

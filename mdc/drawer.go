@@ -14,11 +14,13 @@ type drawer struct {
 
 	id string
 	mdcComponent app.Value
+	open bool
 
 	Iclass []string
 	Ititle string
 	Isubtitle string
 	Icontent []app.UI
+	Idismissible bool
 }
 
 type IDrawer interface {
@@ -29,6 +31,25 @@ type IDrawer interface {
 	Title(string) IDrawer
 	Subtitle(string) IDrawer
 	Content(...app.UI) IDrawer
+	Dismissible(bool) IDrawer
+
+	ToggleOpen()
+}
+
+func (d *drawer) GetComponent() app.Value {
+	return d.mdcComponent
+}
+
+func (d *drawer) setOpen(open bool) {
+	if d.mdcComponent == nil {
+		return
+	}
+	d.open = open
+	d.mdcComponent.Set("open", open)
+}
+
+func (d *drawer) ToggleOpen() {
+	d.setOpen(!d.open)
 }
 
 func (d *drawer) ID(id string) IDrawer {
@@ -56,24 +77,31 @@ func (d *drawer) Content(i ...app.UI) IDrawer {
 	return d
 }
 
+func (d *drawer) Dismissible(v bool) IDrawer {
+	d.Idismissible = v
+	return d
+}
+
 func (d *drawer) OnMount(ctx app.Context) {
 	if d.id == "" {
 		d.id = fmt.Sprintf("drawer-%d", allocID())
 	}
 
-	/* Only for dismissable drawers
-	d.mdcComponent = app.Window().
-		Get("mdc").
-		Get("drawer").
-		Get("MDCDrawer").
-		Call("attachTo", ctx.JSSrc())
-	*/
+	if d.Idismissible {
+		d.mdcComponent = app.Window().
+			Get("mdc").
+			Get("drawer").
+			Get("MDCDrawer").
+			Call("attachTo", ctx.JSSrc())
+	}
 
 	app.Log("mounted", d.id, d.mdcComponent)
 }
 
 func (d *drawer) OnDismount(ctx app.Context) {
-	//d.mdcComponent.Call("destroy")
+	if d.mdcComponent != nil {
+		d.mdcComponent.Call("destroy")
+	}
 }
 
 func (d *drawer) Render() app.UI {
@@ -81,6 +109,10 @@ func (d *drawer) Render() app.UI {
 		Class("mdc-drawer").
 		Class(d.Iclass...).
 		ID(d.id)
+
+	if d.Idismissible {
+		aside = aside.Class("mdc-drawer--dismissible")
+	}
 
 	var header app.UI
 	if d.Ititle != "" || d.Isubtitle != "" {
