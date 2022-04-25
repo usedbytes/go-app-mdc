@@ -79,6 +79,12 @@ func ButtonExample() *buttonExample {
 			eyeButton,
 			arrowButton,
 		),
+		mdc.FAB().
+			ID("fab").
+			Icon(app.I().
+				Class("material-icons", mdc.FABIconClass).
+				Text("code"),
+			),
 	}
 
 	return ex

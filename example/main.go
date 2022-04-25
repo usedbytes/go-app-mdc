@@ -133,6 +133,12 @@ const rawStyles = `
   position: absolute;
   z-index: 7;
 }
+
+#fab {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+}
 </style>
 `
 
