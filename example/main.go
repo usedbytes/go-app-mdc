@@ -20,6 +20,7 @@ type example struct {
 	content app.UI
 	buttons *buttonExample
 	lists   *listExample
+	cards   *cardExample
 }
 
 func (e *example) OnMount(ctx app.Context) {
@@ -56,6 +57,20 @@ func (e *example) OnMount(ctx app.Context) {
 						e.content = e.lists
 						e.Update()
 					}),
+				mdc.NavListItem().
+					Text("Cards").
+					Meta(
+						app.Span().
+						Class(mdc.ListItemMetaClass).
+						Text("META"),
+					).
+					OnClick(func(ctx app.Context, ev app.Event) {
+						if (e.cards == nil) {
+							e.cards = CardExample()
+						}
+						e.content = e.cards
+						e.Update()
+					}),
 			),
 		)
 	e.banner = mdc.Banner().
@@ -75,6 +90,9 @@ func (e *example) OnMount(ctx app.Context) {
 					e.banner.Close()
 				}),
 		).Open()
+
+	e.cards = CardExample()
+	e.content = e.cards
 }
 
 func (e *example) Render() app.UI {
@@ -139,6 +157,10 @@ const rawStyles = `
   bottom: 1rem;
   right: 1rem;
 }
+
+.img-card {
+	width: 480px;
+}
 </style>
 `
 
@@ -155,6 +177,7 @@ func run() error {
 		},
 		Styles: []string{
 			"https://fonts.googleapis.com/icon?family=Material+Icons",
+			"https://fonts.googleapis.com/css?family=Roboto:300,400,500",
 			"https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css",
 		},
 		RawHeaders: []string{
