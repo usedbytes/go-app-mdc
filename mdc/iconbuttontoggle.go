@@ -31,6 +31,7 @@ type IIconButtonToggle interface {
 	IconOff(string) IIconButtonToggle
 	On(bool) IIconButtonToggle
 	OnClick(app.EventHandler) IIconButtonToggle
+	Class(...string) IIconButtonToggle
 }
 
 func (b *iconButtonToggle) ID(id string) IIconButtonToggle {
@@ -59,7 +60,7 @@ func (b *iconButtonToggle) OnClick(handler app.EventHandler) IIconButtonToggle {
 }
 
 func (b *iconButtonToggle) Class(c ...string) IIconButtonToggle {
-	b.Iclass = c
+	b.Iclass = append(b.Iclass, c...)
 	return b
 }
 

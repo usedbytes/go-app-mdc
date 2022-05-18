@@ -36,6 +36,7 @@ type IButton interface {
 	LeadingIcon(string) IButton
 	TrailingIcon(string) IButton
 	OnClick(app.EventHandler) IButton
+	Class(...string) IButton
 }
 
 func (b *button) ID(id string) IButton {
@@ -74,7 +75,7 @@ func (b *button) OnClick(handler app.EventHandler) IButton {
 }
 
 func (b *button) Class(c ...string) IButton {
-	b.Iclass = c
+	b.Iclass = append(b.Iclass, c...)
 	return b
 }
 

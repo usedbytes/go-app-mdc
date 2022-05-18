@@ -47,7 +47,7 @@ func (b *iconButton) OnClick(handler app.EventHandler) IIconButton {
 }
 
 func (b *iconButton) Class(c ...string) IIconButton {
-	b.Iclass = c
+	b.Iclass = append(b.Iclass, c...)
 	return b
 }
 
