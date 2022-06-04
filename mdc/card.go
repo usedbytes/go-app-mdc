@@ -35,6 +35,7 @@ type card struct {
 	IOutlined bool
 	IActionFullBleed bool
 	IClasses []string
+	IonClick app.EventHandler
 }
 
 type ICard interface {
@@ -47,6 +48,7 @@ type ICard interface {
 	Contents(...app.UI) ICard
 	Buttons(...app.UI) ICard
 	Icons(...app.UI) ICard
+	OnClick(app.EventHandler) ICard
 }
 
 func (c *card) ID(id string) ICard {
@@ -84,6 +86,12 @@ func (c *card) Icons(v ...app.UI) ICard {
 	return c
 }
 
+func (c *card) OnClick(handler app.EventHandler) ICard {
+	c.IonClick = handler
+	return c
+}
+
+
 func (c *card) OnMount(ctx app.Context) {
 	if c.id == "" {
 		c.id = fmt.Sprintf("card-%d", allocID())
@@ -100,6 +108,10 @@ func (c *card) Render() app.UI {
 
 	if c.IOutlined {
 		div = div.Class("mdc-card--outlined")
+	}
+
+	if c.IonClick != nil {
+		div = div.OnClick(c.IonClick)
 	}
 
 	// TODO: The styles are needed to make media/images

@@ -31,7 +31,10 @@ func CardExample() *cardExample {
 							Class("mdc-typography--body1").
 							Text("This is the body, I need to write some long text to see how it looks. This element is getting really heavily indented, it's quite messy. Still, it would have been much easier to just copy-paste lorem ipsum or something."),
 					),
-			),
+			).
+			OnClick(func(c app.Context, e app.Event) {
+				app.Log(c.JSSrc().Get("id"), "clicked")
+			}),
 		mdc.Card().
 			Class("img-card").
 			Outlined(true).
