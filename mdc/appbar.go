@@ -25,6 +25,8 @@ type appBarTop struct {
 	IactionButtons []app.UI
 
 	IonClick app.EventHandler
+
+	Ifixed bool
 }
 
 type IAppBar interface {
@@ -34,6 +36,7 @@ type IAppBar interface {
 	NavIcon(app.UI) IAppBar
 	Title(string) IAppBar
 	Actions(...app.UI) IAppBar
+	Fixed(bool) IAppBar
 }
 
 func (a *appBarTop) ID(id string) IAppBar {
@@ -53,6 +56,11 @@ func (a *appBarTop) Title(t string) IAppBar {
 
 func (a *appBarTop) Actions(v ...app.UI) IAppBar {
 	a.IactionButtons = app.FilterUIElems(v...)
+	return a
+}
+
+func (a *appBarTop) Fixed(fixed bool) IAppBar {
+	a.Ifixed = fixed
 	return a
 }
 
@@ -78,6 +86,10 @@ func (a *appBarTop) Render() app.UI {
 	appBarTop := app.Header().
 		Class("mdc-top-app-bar").
 		ID(a.id)
+
+	if a.Ifixed {
+		appBarTop = appBarTop.Class("mdc-top-app-bar--fixed")
+	}
 
 	sectionStart := app.Section().
 		Class("mdc-top-app-bar__section").
